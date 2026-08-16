@@ -3,11 +3,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from app.database import get_db
 
-from app.models import User
-from app.schemas import UserResponse
-from typing import List
+from app.routers import auth
 
 app = FastAPI(title="CodeVerity API")
+app.include_router(auth.router)
 
 @app.get("/")
 def read_root():
@@ -22,7 +21,3 @@ def db_check(db: Session = Depends(get_db)):
     result = db.execute(text("SELECT COUNT(*) FROM users"))
     count = result.scalar()
     return {"database": "connected", "user_count": count}
-
-@app.get("/users-test", response_model=List[UserResponse])
-def users_test(db: Session = Depends(get_db)):
-    return db.query(User).all()
