@@ -4,6 +4,7 @@ from app.database import get_db
 from app.models import User
 from app.schemas import UserCreate, UserResponse, UserLogin, Token
 from app.auth import hash_password, verify_password, create_access_token
+from app.auth import get_current_user, require_role
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -32,3 +33,11 @@ def login(credentials: UserLogin, db: Session = Depends(get_db)):
 
     token = create_access_token(data={"sub": str(user.id), "role": user.role})
     return {"access_token": token, "token_type": "bearer"}
+
+@router.get("/me", response_model=UserResponse)
+def get_me(current_user: User = Depends(get_current_user)):
+    return current_user
+
+@router.get("/instructor-only")
+def instructor_only_route(current_user: User = Depends(require_role("INSTRUCTOR"))):
+    return {"message": f"Welcome instructor {current_user.full_name}"}
