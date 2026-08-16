@@ -36,3 +36,14 @@ class Assignment(Base):
     created_at = Column(TIMESTAMP, server_default=text("NOW()"))
 
     course = relationship("Course", back_populates="assignments")
+
+class Submission(Base):
+    __tablename__ = "submissions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    student_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    assignment_id = Column(Integer, ForeignKey("assignments.id", ondelete="CASCADE"), nullable=False)
+    code = Column(Text, nullable=False)
+    language = Column(String(20), nullable=False)
+    version = Column(Integer, default=1)
+    submitted_at = Column(TIMESTAMP, server_default=text("NOW()"))

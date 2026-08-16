@@ -56,3 +56,20 @@ class AssignmentResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class SubmissionCreate(BaseModel):
+    assignment_id: int
+    code: str
+    language: str
+
+class SubmissionResponse(BaseModel):
+    id: int
+    student_id: int
+    assignment_id: int
+    code: str
+    language: str
+    version: int
+    submitted_at: datetime
+
+    class Config:
+        from_attributes = True
