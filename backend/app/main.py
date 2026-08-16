@@ -2,11 +2,11 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from app.database import get_db
-
-from app.routers import auth
+from app.routers import auth, courses
 
 app = FastAPI(title="CodeVerity API")
 app.include_router(auth.router)
+app.include_router(courses.router)
 
 @app.get("/")
 def read_root():
